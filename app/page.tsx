@@ -1156,6 +1156,13 @@ const IndexPage: React.FC = () => {
       input.hasDriveAndInverter = true;
     }
 
+    if (input.emergencyDevice) {
+      totalSum += 11000;
+      details.push({ component: 'Emergency Device', price: 11000 });
+    }
+
+    calculateStopsAndPersons(input, totalSum, details);
+
     if (input.elevatorType === 'Gearless') {
 
       if (input.hasDriveAndInverter) {
@@ -1168,13 +1175,7 @@ const IndexPage: React.FC = () => {
         }
       }
       
-      if (input.emergencyDevice) {
-        totalSum += 11000;
-        details.push({ component: 'Emergency Device', price: 11000 });
-      }
 
-      // Logic for stops and person count
-      calculateStopsAndPersons(input, totalSum, details);
 
     } else if (input.elevatorType === 'Gearbox') {
 
@@ -1191,16 +1192,13 @@ const IndexPage: React.FC = () => {
           details.push({ component: 'Type: Delta', price: 20000 });
         }
       }
-
-      // Logic for stops and person count
-      calculateStopsAndPersons(input, totalSum, details);
     }
 
     return { totalSum, details };
   };
 
   const calculateStopsAndPersons = (input: InputState, totalSum: number, details: OutputDetails[]) => {
-    if(input.elevatorType = 'Gearless'){
+    if(input.elevatorType === 'Gearless'){
       if (input.stops <= 3 && (input.personCount >= 1 && input.personCount <= 2)) { 
         totalSum += 90000;
         details.push({ component: '(1-3) Stops & (1-2) Persons 2.8KW', price: 90000 });
@@ -1210,32 +1208,35 @@ const IndexPage: React.FC = () => {
       } else if (input.stops <= 5 && (input.personCount >= 4 && input.personCount <= 7)) {
         totalSum += 125000;
         details.push({ component: '(1-5) Stops & (4-7) Persons 5.1 KW', price: 125000 });
+      }else{
+
       }
-    }else{
+    } else if(input.elevatorType === 'Gearbox'){
       if (input.stops <= 5 && (input.personCount >= 1 && input.personCount <= 4)) { 
         totalSum += 90000;
-        details.push({ component: '(1-5) Stops && (1-4) Persons 8 حصان', price: 100000 });
+        details.push({ component: '(1-5) Stops && (1-4) Persons 8 HP', price: 100000 });
       } else if (input.stops <= 5 && (input.personCount >= 4 && input.personCount <= 6)) {
         totalSum += 105000;
-        details.push({ component: '(1-5) Stops && (4-6) Persons 9 حصان', price: 105000 });
+        details.push({ component: '(1-5) Stops && (4-6) Persons 9 HP', price: 105000 });
       } else if (input.stops <= 8 && (input.personCount >= 5 && input.personCount <= 6)) {
         totalSum += 110000;
-        details.push({ component: '(5-8) Stops && (5-6) Persons 10 حصان', price: 110000 });
-      }else if (input.stops <= 10 && (input.personCount >= 1 && input.personCount <= 4)) {
+        details.push({ component: '(5-8) Stops && (5-6) Persons 10 HP', price: 110000 });
+      } else if (input.stops <= 10 && (input.personCount >= 1 && input.personCount <= 4)) {
         totalSum += 135000;
-        details.push({ component: '(5-10) Stops && (1-4) Persons 12 حصان', price: 135000 });
-      }else if (input.stops <= 15 && (input.personCount >= 8 && input.personCount <= 12)) {
+        details.push({ component: '(5-10) Stops && (1-4) Persons 12 HP', price: 135000 });
+      } else if (input.stops <= 15 && (input.personCount >= 8 && input.personCount <= 12)) {
         totalSum += 165000;
-        details.push({ component: '(10-15) Stops && (8-12) Persons 15 حصان', price: 165000 });
-      }else if (input.stops <= 15 && (input.personCount >= 12 && input.personCount <= 15)) {
+        details.push({ component: '(10-15) Stops && (8-12) Persons 15 HP', price: 165000 });
+      } else if (input.stops <= 15 && (input.personCount >= 12 && input.personCount <= 15)) {
         totalSum += 190000;
-        details.push({ component: '(10-15) Stops && (12-15) Persons 15 حصان', price: 190000 });
-      }else if (input.stops <= 15 && (input.personCount <= 15)) {
+        details.push({ component: '(10-15) Stops && (12-15) Persons 15 HP', price: 190000 });
+      } else if (input.stops <= 15 && (input.personCount <= 15)) {
         totalSum += 210000;
-        details.push({ component: '(10-15) Stops && (12-15) Persons 15 حصان', price: 210000 });
+        details.push({ component: '(10-15) Stops && (12-15) Persons 15 HP', price: 210000 });
       }
     }
-  };
+};
+
 
   const generatePDF = (avgQuote: number) => {
     const doc = new jsPDF();
@@ -1252,9 +1253,20 @@ const IndexPage: React.FC = () => {
         <Box display="flex" flexDirection="column" gap={2}>
           <FormControlLabel
             control={<Checkbox checked={input.hasPowerCables} onChange={handleChange} name="hasPowerCables" />}
-            label="Has Power Cables"
+            label="Power Cables"
             className='text-slate-700'
           />
+          <FormControlLabel
+            control={<Checkbox checked={input.hasControlUnit} onChange={handleChange} name="hasControlUnit" />}
+            label="Control Unit"
+            className='text-slate-700'
+          />
+          <FormControlLabel
+            control={<Checkbox checked={input.hasSpeedLimiter} onChange={handleChange} name="hasSpeedLimiter" />}
+            label="Speed Limiter"
+            className='text-slate-700'
+          />
+
           <FormControlLabel
             control={<Checkbox checked={input.hasMachineRoom} onChange={handleChange} name="hasMachineRoom" />}
             label="Has Machine Room"
@@ -1280,6 +1292,15 @@ const IndexPage: React.FC = () => {
                 label="Has Drive and Inverter"
                 className='text-slate-700'
               />
+            <TextField
+              label="Number of Stops"
+              type="number"
+              name="stops"
+              value={input.stops}
+              onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+              variant="outlined"
+              inputProps={{ min: 1, max: 5 }}
+            />
             </>
           )}
           {input.elevatorType === 'Gearbox' && (
@@ -1294,30 +1315,36 @@ const IndexPage: React.FC = () => {
                 label="Handling Wheel"
                 className='text-slate-700'
               />
+              <FormControlLabel
+                control={<Checkbox checked={input.hasDriveAndInverter} onChange={handleChange} name="hasDriveAndInverter" />}
+                label="Has Drive and Inverter"
+                className='text-slate-700'
+              />
+            {input.hasDriveAndInverter && (
+              <TextField
+                select
+                label="Type"
+                value={input.type}
+                onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                name="type"
+                variant="outlined"
+              >
+                <MenuItem value="">Select Type</MenuItem>
+                <MenuItem value="Jifran">Jifran</MenuItem>
+                <MenuItem value="Delta">Delta</MenuItem>
+              </TextField>
+            )}
+            <TextField
+              label="Number of Stops"
+              type="number"
+              name="stops"
+              value={input.stops}
+              onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+              variant="outlined"
+              inputProps={{ min: 1, max: 15 }}
+            />
             </>
           )}
-          {input.elevatorType && (
-            <TextField
-              select
-              label="Type"
-              value={input.type}
-              onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-              name="type"
-              variant="outlined"
-            >
-              <MenuItem value="">Select Type</MenuItem>
-              <MenuItem value="Jifran">Jifran</MenuItem>
-              <MenuItem value="Delta">Delta</MenuItem>
-            </TextField>
-          )}
-          <TextField
-            label="Number of Stops"
-            type="number"
-            name="stops"
-            value={input.stops}
-            onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-            variant="outlined"
-          />
           <TextField
             label="Number of Floors"
             type="number"
