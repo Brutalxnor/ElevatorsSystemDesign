@@ -846,33 +846,42 @@ return (
     </Typography>
     <form onSubmit={handleSubmit}>
       <Box display="flex" flexDirection="column" gap={3}>
-        
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Machine</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Machine</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControlLabel
                 control={<Checkbox checked={input.hasPowerCables} onChange={handleChange} name="hasPowerCables" />}
                 label="Power Cables"
                 className='text-slate-700'
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControlLabel
                 control={<Checkbox checked={input.hasControlUnit} onChange={handleChange} name="hasControlUnit" />}
                 label="Control Unit"
                 className='text-slate-700'
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControlLabel
                 control={<Checkbox checked={input.hasSpeedLimiter} onChange={handleChange} name="hasSpeedLimiter" />}
                 label="Speed Limiter"
                 className='text-slate-700'
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControlLabel
                 control={<Checkbox checked={input.hasMachineRoom} onChange={handleChange} name="hasMachineRoom" />}
                 label="Has Machine Room"
                 className='text-slate-700'
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <TextField
                 label="Elevator Type"
                 value={input.hasMachineRoom ? 'Gearbox' : 'Gearless'}
@@ -880,17 +889,41 @@ return (
                   readOnly: true,
                 }}
                 variant="outlined"
+                fullWidth
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControlLabel
                 control={<Checkbox checked={input.hasDriveAndInverter} onChange={handleChange} name="hasDriveAndInverter" />}
                 label="Has Drive and Inverter"
                 className='text-slate-700'
               />
+            </Grid>
+            {input.hasDriveAndInverter && (
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  select
+                  label="Inverter Type"
+                  value={input.type}
+                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                  name="type"
+                  variant="outlined"
+                  fullWidth
+                >
+                  <MenuItem value="">Select Type</MenuItem>
+                  <MenuItem value="Jifran">Jifran</MenuItem>
+                  <MenuItem value="Delta">Delta</MenuItem>
+                </TextField>
+              </Grid>
+            )}
+            <Grid item xs={12} sm={6} md={4}>
               <FormControlLabel
                 control={<Checkbox checked={input.emergencyDevice} onChange={handleChange} name="emergencyDevice" />}
                 label="Emergency Device"
                 className='text-slate-700'
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <TextField
                 label="Number of Stops"
                 type="number"
@@ -899,7 +932,10 @@ return (
                 onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
                 variant="outlined"
                 inputProps={{ min: 1, max: 5 }}
+                fullWidth
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <TextField
                 label="Person Count"
                 type="number"
@@ -907,113 +943,104 @@ return (
                 value={input.personCount}
                 onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
                 variant="outlined"
-                inputProps={{ min: 1, max: 5 }}
+                inputProps={{ min: 1, max: 15 }}
+                fullWidth
               />
-              {input.elevatorType === 'Gearless' && (
-                <>
-                </>
-              )}
-              {input.elevatorType === 'Gearbox' && (
-                <>
-                  <FormControlLabel
-                    control={<Checkbox checked={input.emergencyDevice} onChange={handleChange} name="emergencyDevice" />}
-                    label="Emergency Device"
-                    className='text-slate-700'
-                  />
+            </Grid>
+            {input.elevatorType === 'Gearbox' && (
+              <>
+                <Grid item xs={12} sm={6} md={4}>
                   <FormControlLabel
                     control={<Checkbox checked={input.handlingWheel} onChange={handleChange} name="handlingWheel" />}
                     label="Handling Wheel"
                     className='text-slate-700'
                   />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
                   <TextField
-                    label="Person Count"
-                    type="number"
-                    name="personCount"
-                    value={input.personCount}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    variant="outlined"
-                    inputProps={{ min: 1, max: 15 }}
-                  />
-                  {input.hasDriveAndInverter && (
-                    <TextField
-                      select
-                      label="Type"
-                      value={input.type}
-                      onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                      name="type"
-                      variant="outlined"
-                    >
-                      <MenuItem value="">Select Type</MenuItem>
-                      <MenuItem value="Jifran">Jifran</MenuItem>
-                      <MenuItem value="Delta">Delta</MenuItem>
-                    </TextField>
-                  )}
-                  <TextField
-                    label="Number of Stops"
+                    label="Stops"
                     type="number"
                     name="stops"
                     value={input.stops}
                     onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
                     variant="outlined"
                     inputProps={{ min: 1, max: 15 }}
+                    fullWidth
                   />
-                </>
-              )}
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+                </Grid>
+              </>
+            )}
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
 
 
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Doors</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Doors</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControlLabel
                 control={<Checkbox checked={input.isAutomatic} onChange={handleChange} name="isAutomatic" />}
                 label="Automatic"
-                className='text-slate-700'
+                className="text-slate-700"
               />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControlLabel
                 control={<Checkbox checked={input.isHalfAutomatic} onChange={handleChange} name="isHalfAutomatic" />}
                 label="Half Automatic"
-                className='text-slate-700'
+                className="text-slate-700"
               />
-              {input.isHalfAutomatic && (
-                <>
+            </Grid>
+            {input.isHalfAutomatic && (
+              <>
+                <Grid item xs={12} sm={6} md={4}>
                   <FormControlLabel
                     control={<Checkbox checked={input.doorAssembelyAccessories} onChange={handleChange} name="doorAssembelyAccessories" />}
-                    label="Door Assembely Accessories"
-                    className='text-slate-700'
+                    label="Door Assembly Accessories"
+                    className="text-slate-700"
                   />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
                   <FormControlLabel
                     control={<Checkbox checked={input.doorAccessories} onChange={handleChange} name="doorAccessories" />}
                     label="Door Accessories"
-                    className='text-slate-700'
+                    className="text-slate-700"
                   />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
                   <FormControlLabel
                     control={<Checkbox checked={input.doorHealtyNail} onChange={handleChange} name="doorHealtyNail" />}
-                    label="Door Healty Nail"
-                    className='text-slate-700'
+                    label="Door Healthy Nail"
+                    className="text-slate-700"
                   />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
                   <FormControlLabel
                     control={<Checkbox checked={input.doorKnob} onChange={handleChange} name="doorKnob" />}
                     label="Door Knob"
-                    className='text-slate-700'
+                    className="text-slate-700"
                   />
-
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
                   <FormControlLabel
                     control={<Checkbox checked={input.tolomba} onChange={handleChange} name="tolomba" />}
                     label="Tolomba"
-                    className='text-slate-700'
+                    className="text-slate-700"
                   />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
                   <FormControlLabel
                     control={<Checkbox checked={input.outerIntercome} onChange={handleChange} name="outerIntercome" />}
-                    label="Outer Intercome"
-                    className='text-slate-700'
+                    label="Outer Intercom"
+                    className="text-slate-700"
                   />
-
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
                   <TextField
                     select
                     label="Half Automatic Type"
@@ -1021,6 +1048,7 @@ return (
                     onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
                     name="halfAutomaticType"
                     variant="outlined"
+                    fullWidth
                   >
                     <MenuItem value="">Select Type</MenuItem>
                     <MenuItem value="localElectrostatic">Local Electrostatic</MenuItem>
@@ -1028,79 +1056,87 @@ return (
                     <MenuItem value="localPanorama">Local Panorama</MenuItem>
                     <MenuItem value="localSuperPanorama">Local Super Panorama</MenuItem>
                   </TextField>
-                
-                </>
-              )}
-
-              {(input.halfAutomaticType === 'localElectrostatic') &&(
-                  <TextField
-                  select
-                  label="Local Electrostatic Size"
-                  value={input.localElectrostaticSize}
-                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                  name="localElectrostaticSize"
-                  variant="outlined"
-                >
-                  <MenuItem value="">Select Type</MenuItem>
-                  <MenuItem value="localElectrostaticSize60">Size 60</MenuItem>
-                  <MenuItem value="localElectrostaticSize70">Size 70</MenuItem>
-                  <MenuItem value="localElectrostaticSize80">Size 80</MenuItem>
-                  <MenuItem value="localElectrostaticSize90">Size 90</MenuItem>
-                  <MenuItem value="localElectrostaticSize120">Size 120</MenuItem>
-                </TextField>
-              )}
-
-              {(input.halfAutomaticType === 'turkishImport') &&(
-                  <TextField
-                  select
-                  label="Turkish Imported Size"
-                  value={input.turkishImportedSize}
-                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                  name="turkishImportedSize"
-                  variant="outlined"
-                >
-                  <MenuItem value="">Select Type</MenuItem>
-                  <MenuItem value="turkishImportSize70">Size 70</MenuItem>
-                  <MenuItem value="turkishImportSize80">Size 80</MenuItem>
-                  <MenuItem value="turkishImportSize90">Size 90</MenuItem>
-                  <MenuItem value="turkishImportSize120">Size 120</MenuItem>
-                </TextField>
-              )}
-
-              {(input.halfAutomaticType === 'localPanorama') &&(
-                  <TextField
-                  select
-                  label="Local Panorama Size"
-                  value={input.localPanoramaSize}
-                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                  name="localPanoramaSize"
-                  variant="outlined"
-                >
-                  <MenuItem value="">Select Type</MenuItem>
-                  <MenuItem value="localPanoramaSize70">Size 70</MenuItem>
-                  <MenuItem value="localPanoramaSize80">Size 80</MenuItem>
-                  <MenuItem value="localPanoramaSize90">Size 90</MenuItem>
-                </TextField>
-              )}
-
-              {(input.halfAutomaticType === 'localSuperPanorama') &&(
-                  <TextField
-                  select
-                  label="Local Super Panorama Size"
-                  value={input.localSuperPanoramaSize}
-                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                  name="localSuperPanoramaSize"
-                  variant="outlined"
-                >
-                  <MenuItem value="">Select Type</MenuItem>
-                  <MenuItem value="localSuperPanoramaSize70">Size 70</MenuItem>
-                  <MenuItem value="localSuperPanoramaSize80">Size 80</MenuItem>
-                  <MenuItem value="localSuperPanoramaSize90">Size 90</MenuItem>
-                </TextField>
-              )}
-
-              {input.isAutomatic && (
-                <>
+                </Grid>
+                {input.halfAutomaticType === 'localElectrostatic' && (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <TextField
+                      select
+                      label="Local Electrostatic Size"
+                      value={input.localElectrostaticSize}
+                      onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                      name="localElectrostaticSize"
+                      variant="outlined"
+                      fullWidth
+                    >
+                      <MenuItem value="">Select Type</MenuItem>
+                      <MenuItem value="localElectrostaticSize60">Size 60</MenuItem>
+                      <MenuItem value="localElectrostaticSize70">Size 70</MenuItem>
+                      <MenuItem value="localElectrostaticSize80">Size 80</MenuItem>
+                      <MenuItem value="localElectrostaticSize90">Size 90</MenuItem>
+                      <MenuItem value="localElectrostaticSize120">Size 120</MenuItem>
+                    </TextField>
+                  </Grid>
+                )}
+                {input.halfAutomaticType === 'turkishImport' && (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <TextField
+                      select
+                      label="Turkish Imported Size"
+                      value={input.turkishImportedSize}
+                      onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                      name="turkishImportedSize"
+                      variant="outlined"
+                      fullWidth
+                    >
+                      <MenuItem value="">Select Type</MenuItem>
+                      <MenuItem value="turkishImportSize70">Size 70</MenuItem>
+                      <MenuItem value="turkishImportSize80">Size 80</MenuItem>
+                      <MenuItem value="turkishImportSize90">Size 90</MenuItem>
+                      <MenuItem value="turkishImportSize120">Size 120</MenuItem>
+                    </TextField>
+                  </Grid>
+                )}
+                {input.halfAutomaticType === 'localPanorama' && (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <TextField
+                      select
+                      label="Local Panorama Size"
+                      value={input.localPanoramaSize}
+                      onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                      name="localPanoramaSize"
+                      variant="outlined"
+                      fullWidth
+                    >
+                      <MenuItem value="">Select Type</MenuItem>
+                      <MenuItem value="localPanoramaSize70">Size 70</MenuItem>
+                      <MenuItem value="localPanoramaSize80">Size 80</MenuItem>
+                      <MenuItem value="localPanoramaSize90">Size 90</MenuItem>
+                    </TextField>
+                  </Grid>
+                )}
+                {input.halfAutomaticType === 'localSuperPanorama' && (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <TextField
+                      select
+                      label="Local Super Panorama Size"
+                      value={input.localSuperPanoramaSize}
+                      onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                      name="localSuperPanoramaSize"
+                      variant="outlined"
+                      fullWidth
+                    >
+                      <MenuItem value="">Select Type</MenuItem>
+                      <MenuItem value="localSuperPanoramaSize70">Size 70</MenuItem>
+                      <MenuItem value="localSuperPanoramaSize80">Size 80</MenuItem>
+                      <MenuItem value="localSuperPanoramaSize90">Size 90</MenuItem>
+                    </TextField>
+                  </Grid>
+                )}
+              </>
+            )}
+            {input.isAutomatic && (
+              <>
+                <Grid item xs={12} sm={6} md={4}>
                   <TextField
                     select
                     label="Automatic Type"
@@ -1108,6 +1144,7 @@ return (
                     onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
                     name="automaticType"
                     variant="outlined"
+                    fullWidth                    
                   >
                     <MenuItem value="">Select Type</MenuItem>
                     <MenuItem value="italianSilkom">Italian Silkom</MenuItem>
@@ -1115,138 +1152,154 @@ return (
                     <MenuItem value="fermotor">Fermotor</MenuItem>
                     <MenuItem value="chineeseSilkom">Chineese Silkom</MenuItem>
                   </TextField>
-                </>
-              )}
-
-              {(input.automaticType === 'italianSilkom') && (
-                <>
-                  <TextField
-                    select
-                    label="Italian Silkom Internal Size"
-                    value={input.italianSilkomInternalSize}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    name="italianSilkomInternalSize"
-                    variant="outlined"
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="italianSilkomInternalSize70">Size 70</MenuItem>
-                    <MenuItem value="italianSilkomInternalSize80">Size 80</MenuItem>
-                    <MenuItem value="italianSilkomInternalSize90">Size 90</MenuItem>
-                  </TextField>
-
-                  <TextField
-                    select
-                    label="Italian Silkom External Size"
-                    value={input.italianSilkomExternalSize}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    name="italianSilkomExternalSize"
-                    variant="outlined"
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="italianSilkomExternalSize70">Size 70</MenuItem>
-                    <MenuItem value="italianSilkomExternalSize80">Size 80</MenuItem>
-                    <MenuItem value="italianSilkomExternalSize90">Size 90</MenuItem>
-                  </TextField>
-                </>
-              )}
-
-
-              {(input.automaticType === 'turkishHas') && (
-                <>
-                  <TextField
-                    select
-                    label="Turkish Has Internal Size"
-                    value={input.turkishHasInternalSize}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    name="turkishHasInternalSize"
-                    variant="outlined"
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="turkishHasInternalSize70">Size 70</MenuItem>
-                    <MenuItem value="turkishHasInternalSize80">Size 80</MenuItem>
-                    <MenuItem value="turkishHasInternalSize90">Size 90</MenuItem>
-                  </TextField>
-
-                  <TextField
-                    select
-                    label="Turkish Has External Size"
-                    value={input.turkishHasExternalSize}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    name="turkishHasExternalSize"
-                    variant="outlined"
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="turkishHasExternalSize70">Size 70</MenuItem>
-                    <MenuItem value="turkishHasExternalSize80">Size 80</MenuItem>
-                    <MenuItem value="turkishHasExternalSize90">Size 90</MenuItem>
-                  </TextField>
-                </>
-              )}
-
-              {(input.automaticType === 'fermotor') && (
-                <>
-                  <TextField
-                    select
-                    label="Fermotor Internal Size"
-                    value={input.fermotorInternalSize}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    name="fermotorInternalSize"
-                    variant="outlined"
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="fermotorInternalSize70">Size 70</MenuItem>
-                    <MenuItem value="fermotorInternalSize80">Size 80</MenuItem>
-                    <MenuItem value="fermotorInternalSize90">Size 90</MenuItem>
-                  </TextField>
-
-                  <TextField
-                    select
-                    label="Fermotor External Size"
-                    value={input.fermotorExternalSize}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    name="fermotorExternalSize"
-                    variant="outlined"
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="fermotorExternalSize70">Size 70</MenuItem>
-                    <MenuItem value="fermotorExternalSize80">Size 80</MenuItem>
-                    <MenuItem value="fermotorExternalSize90">Size 90</MenuItem>
-                  </TextField>
-                </>
-              )}
-
-              {(input.automaticType === 'chineeseSilkom') && (
-                <>
-                  <TextField
-                    select
-                    label="Chineese Silkom Internal Size"
-                    value={input.chineeseSilkomInternalSize}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    name="chineeseSilkomInternalSize"
-                    variant="outlined"
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="chineeseSilkomInternalSize70">Size 70</MenuItem>
-                    <MenuItem value="chineeseSilkomInternalSize80">Size 80</MenuItem>
-                    <MenuItem value="chineeseSilkomInternalSize90">Size 90</MenuItem>
-                  </TextField>
-
-                  <TextField
-                    select
-                    label="Chineese Silkom External Size"
-                    value={input.chineeseSilkomExternalSize}
-                    onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                    name="chineeseSilkomExternalSize"
-                    variant="outlined"
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="chineeseSilkomExternalSize70">Size 70</MenuItem>
-                    <MenuItem value="chineeseSilkomExternalSize80">Size 80</MenuItem>
-                    <MenuItem value="chineeseSilkomExternalSize90">Size 90</MenuItem>
-                  </TextField>
-                </>
-              )}
-
+                </Grid>
+                {input.automaticType === 'italianSilkom' && (
+                  <>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        select
+                        label="Italian Silkom Internal Size"
+                        value={input.italianSilkomInternalSize}
+                        onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                        name="italianSilkomInternalSize"
+                        variant="outlined"
+                        fullWidth                        
+                      >
+                        <MenuItem value="">Select Type</MenuItem>
+                        <MenuItem value="italianSilkomInternalSize70">Size 70</MenuItem>
+                        <MenuItem value="italianSilkomInternalSize80">Size 80</MenuItem>
+                        <MenuItem value="italianSilkomInternalSize90">Size 90</MenuItem>
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        select
+                        label="Italian Silkom External Size"
+                        value={input.italianSilkomExternalSize}
+                        onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                        name="italianSilkomExternalSize"
+                        variant="outlined"
+                        fullWidth                        
+                      >
+                        <MenuItem value="">Select Type</MenuItem>
+                        <MenuItem value="italianSilkomExternalSize70">Size 70</MenuItem>
+                        <MenuItem value="italianSilkomExternalSize80">Size 80</MenuItem>
+                        <MenuItem value="italianSilkomExternalSize90">Size 90</MenuItem>
+                      </TextField>
+                    </Grid>
+                  </>
+                )}
+                {input.automaticType === 'turkishHas' && (
+                  <>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        select
+                        label="Turkish Has Internal Size"
+                        value={input.turkishHasInternalSize}
+                        onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                        name="turkishHasInternalSize"
+                        variant="outlined"
+                        fullWidth                        
+                      >
+                        <MenuItem value="">Select Type</MenuItem>
+                        <MenuItem value="turkishHasInternalSize70">Size 70</MenuItem>
+                        <MenuItem value="turkishHasInternalSize80">Size 80</MenuItem>
+                        <MenuItem value="turkishHasInternalSize90">Size 90</MenuItem>
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        select
+                        label="Turkish Has External Size"
+                        value={input.turkishHasExternalSize}
+                        onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                        name="turkishHasExternalSize"
+                        variant="outlined"
+                        fullWidth                        
+                      >
+                        <MenuItem value="">Select Type</MenuItem>
+                        <MenuItem value="turkishHasExternalSize70">Size 70</MenuItem>
+                        <MenuItem value="turkishHasExternalSize80">Size 80</MenuItem>
+                        <MenuItem value="turkishHasExternalSize90">Size 90</MenuItem>
+                      </TextField>
+                    </Grid>
+                  </>
+                )}
+                {input.automaticType === 'fermotor' && (
+                  <>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        select
+                        label="Fermotor Internal Size"
+                        value={input.fermotorInternalSize}
+                        onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                        name="fermotorInternalSize"
+                        variant="outlined"
+                        fullWidth                        
+                      >
+                        <MenuItem value="">Select Type</MenuItem>
+                        <MenuItem value="fermotorInternalSize70">Size 70</MenuItem>
+                        <MenuItem value="fermotorInternalSize80">Size 80</MenuItem>
+                        <MenuItem value="fermotorInternalSize90">Size 90</MenuItem>
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        select
+                        label="Fermotor External Size"
+                        value={input.fermotorExternalSize}
+                        onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                        name="fermotorExternalSize"
+                        variant="outlined"
+                        fullWidth                        
+                      >
+                        <MenuItem value="">Select Type</MenuItem>
+                        <MenuItem value="fermotorExternalSize70">Size 70</MenuItem>
+                        <MenuItem value="fermotorExternalSize80">Size 80</MenuItem>
+                        <MenuItem value="fermotorExternalSize90">Size 90</MenuItem>
+                      </TextField>
+                    </Grid>
+                  </>
+                )}
+                {input.automaticType === 'chineeseSilkom' && (
+                  <>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        select
+                        label="Chineese Silkom Internal Size"
+                        value={input.chineeseSilkomInternalSize}
+                        onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                        name="chineeseSilkomInternalSize"
+                        variant="outlined"
+                        fullWidth                        
+                      >
+                        <MenuItem value="">Select Type</MenuItem>
+                        <MenuItem value="chineeseSilkomInternalSize70">Size 70</MenuItem>
+                        <MenuItem value="chineeseSilkomInternalSize80">Size 80</MenuItem>
+                        <MenuItem value="chineeseSilkomInternalSize90">Size 90</MenuItem>
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        select
+                        label="Chineese Silkom External Size"
+                        value={input.chineeseSilkomExternalSize}
+                        onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                        name="chineeseSilkomExternalSize"
+                        variant="outlined"
+                        fullWidth                        
+                      >
+                        <MenuItem value="">Select Type</MenuItem>
+                        <MenuItem value="chineeseSilkomExternalSize70">Size 70</MenuItem>
+                        <MenuItem value="chineeseSilkomExternalSize80">Size 80</MenuItem>
+                        <MenuItem value="chineeseSilkomExternalSize90">Size 90</MenuItem>
+                      </TextField>
+                    </Grid>
+                  </>
+                )}
+              </>
+            )}
+            <Grid item xs={12} sm={6} md={4}>
               <TextField
                 label="Number of Stops"
                 type="number"
@@ -1255,209 +1308,283 @@ return (
                 onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
                 variant="outlined"
                 inputProps={{ min: 1, max: 15 }}
+                fullWidth                
               />
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+            </Grid>
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+
 
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>Stairwell</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
-              <FormControlLabel
-                control={<Checkbox checked={input.hasClipers} onChange={handleChange} name="hasClipers" />}
-                label="Clipers"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasNailPole} onChange={handleChange} name="hasNailPole" />}
-                label="Nail Pole"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasFreeService} onChange={handleChange} name="hasFreeService" />}
-                label="Free Service"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasFingerMagnet} onChange={handleChange} name="hasFingerMagnet" />}
-                label="Finger Magnet"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasPartsBox} onChange={handleChange} name="hasPartsBox" />}
-                label="Box Parts"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasMagneticCell} onChange={handleChange} name="hasMagneticCell" />}
-                label="Magnetic Cell"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasStringPull} onChange={handleChange} name="hasStringPull" />}
-                label="String Pull"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasPartsBoxSbortena} onChange={handleChange} name="hasPartsBoxSbortena" />}
-                label="Parts Box Sbortena"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasNailPoleWeight} onChange={handleChange} name="hasNailPoleWeight" />}
-                label="Nail Pole Weight"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasNailFlanch} onChange={handleChange} name="hasNailFlanch" />}
-                label="Nail Flanch"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasBufferZipper} onChange={handleChange} name="hasBufferZipper" />}
-                label="Buffer Zipper"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.hasPoles} onChange={handleChange} name="hasPoles" />}
-                label="Poles"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.cableControllerString} onChange={handleChange} name="cableControllerString" />}
-                label="Cable Controller String"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.fixingPoleWeight} onChange={handleChange} name="fixingPoleWeight" />}
-                label="Fixing Pole Weight"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.healtyNail} onChange={handleChange} name="healtyNail" />}
-                label="Healty Nail"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.healtyNailWeight} onChange={handleChange} name="healtyNailWeight" />}
-                label="Healty Nail Weight"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.stringPuller} onChange={handleChange} name="stringPuller" />}
-                label="String Puller"
-                className='text-slate-700'
-              />
-              <TextField
-                label="Stroke Length"
-                type="number"
-                name="strokeLength"
-                value={input.strokeLength || 0}
-                onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                variant="outlined"
-              />
-              <TextField
-                select
-                label="Type of Hanger"
-                name="hangerType"
-                value={input.hangerType || ''}
-                onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                variant="outlined"
-              >
-                <MenuItem value="">Select Type</MenuItem>
-                <MenuItem value="direct">Direct</MenuItem>
-                <MenuItem value="2:1">2:1</MenuItem>
-                <MenuItem value="fork">Fork</MenuItem>
-              </TextField>
-              <TextField
-                label="Number of Stops"
-                type="number"
-                name="stops"
-                value={input.stops}
-                onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                variant="outlined"
-                inputProps={{ min: 1, max: 5 }}
-              />
-            </Box>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasClipers} onChange={handleChange} name="hasClipers" />}
+                  label="Clipers"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasNailPole} onChange={handleChange} name="hasNailPole" />}
+                  label="Nail Pole"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasFreeService} onChange={handleChange} name="hasFreeService" />}
+                  label="Free Service"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasFingerMagnet} onChange={handleChange} name="hasFingerMagnet" />}
+                  label="Finger Magnet"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasPartsBox} onChange={handleChange} name="hasPartsBox" />}
+                  label="Box Parts"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasMagneticCell} onChange={handleChange} name="hasMagneticCell" />}
+                  label="Magnetic Cell"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasStringPull} onChange={handleChange} name="hasStringPull" />}
+                  label="String Pull"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasPartsBoxSbortena} onChange={handleChange} name="hasPartsBoxSbortena" />}
+                  label="Parts Box Sbortena"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasNailPoleWeight} onChange={handleChange} name="hasNailPoleWeight" />}
+                  label="Nail Pole Weight"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasNailFlanch} onChange={handleChange} name="hasNailFlanch" />}
+                  label="Nail Flanch"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasBufferZipper} onChange={handleChange} name="hasBufferZipper" />}
+                  label="Buffer Zipper"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.hasPoles} onChange={handleChange} name="hasPoles" />}
+                  label="Poles"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.cableControllerString} onChange={handleChange} name="cableControllerString" />}
+                  label="Cable Controller String"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.fixingPoleWeight} onChange={handleChange} name="fixingPoleWeight" />}
+                  label="Fixing Pole Weight"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.healtyNail} onChange={handleChange} name="healtyNail" />}
+                  label="Healthy Nail"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.healtyNailWeight} onChange={handleChange} name="healtyNailWeight" />}
+                  label="Healthy Nail Weight"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.stringPuller} onChange={handleChange} name="stringPuller" />}
+                  label="String Puller"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  label="Stroke Length"
+                  type="number"
+                  name="strokeLength"
+                  value={input.strokeLength || 0}
+                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                  variant="outlined"
+                  fullWidth                  
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  select
+                  label="Type of Hanger"
+                  name="hangerType"
+                  value={input.hangerType || ''}
+                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                  variant="outlined"
+                  fullWidth                  
+                >
+                  <MenuItem value="">Select Type</MenuItem>
+                  <MenuItem value="direct">Direct</MenuItem>
+                  <MenuItem value="2:1">2:1</MenuItem>
+                  <MenuItem value="fork">Fork</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  label="Number of Stops"
+                  type="number"
+                  name="stops"
+                  value={input.stops}
+                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                  variant="outlined"
+                  inputProps={{ min: 1, max: 5 }}
+                  fullWidth                  
+                />
+              </Grid>
+            </Grid>
           </AccordionDetails>
         </Accordion>
+
+
 
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>Cabin</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
-              <FormControlLabel
-                control={<Checkbox checked={input.isWood} onChange={handleChange} name="isWood" />}
-                label="Wood"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.isStainlessteel} onChange={handleChange} name="isStainlessteel" />}
-                label="Stainlessteel"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.isPanorama} onChange={handleChange} name="isPanorama" />}
-                label="Panorama"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.weightChair} onChange={handleChange} name="weightChair" />}
-                label="Weight Chair"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.internalRequirementBox} onChange={handleChange} name="internalRequirementBox" />}
-                label="Internal Requirement Box"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.cabinLight} onChange={handleChange} name="cabinLight" />}
-                label="Cabin Light"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.serviceBox} onChange={handleChange} name="serviceBox" />}
-                label="Service Box"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.turkishCamPart} onChange={handleChange} name="turkishCamPart" />}
-                label="Turkish Cam Part"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.mazyezBundle} onChange={handleChange} name="mazyezBundle" />}
-                label="Mazyez Bundle"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.photoCell} onChange={handleChange} name="photoCell" />}
-                label="Photo Cell"
-                className='text-slate-700'
-              />
-              <FormControlLabel
-                control={<Checkbox checked={input.zahrWeight} onChange={handleChange} name="zahrWeight" />}
-                label="Zahr Weight"
-                className='text-slate-700'
-              />
-              <TextField
-                label="Person Count"
-                type="number"
-                name="personCount"
-                value={input.personCount}
-                onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
-                variant="outlined"
-                inputProps={{ min: 1, max: 15 }}
-              />
-            </Box>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.isWood} onChange={handleChange} name="isWood" />}
+                  label="Wood"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.isStainlessteel} onChange={handleChange} name="isStainlessteel" />}
+                  label="Stainless Steel"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.isPanorama} onChange={handleChange} name="isPanorama" />}
+                  label="Panorama"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.weightChair} onChange={handleChange} name="weightChair" />}
+                  label="Weight Chair"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.internalRequirementBox} onChange={handleChange} name="internalRequirementBox" />}
+                  label="Internal Requirement Box"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.cabinLight} onChange={handleChange} name="cabinLight" />}
+                  label="Cabin Light"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.serviceBox} onChange={handleChange} name="serviceBox" />}
+                  label="Service Box"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.turkishCamPart} onChange={handleChange} name="turkishCamPart" />}
+                  label="Turkish Cam Part"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.mazyezBundle} onChange={handleChange} name="mazyezBundle" />}
+                  label="Mazyez Bundle"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.photoCell} onChange={handleChange} name="photoCell" />}
+                  label="Photo Cell"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControlLabel
+                  control={<Checkbox checked={input.zahrWeight} onChange={handleChange} name="zahrWeight" />}
+                  label="Zahr Weight"
+                  className="text-slate-700"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  label="Person Count"
+                  type="number"
+                  name="personCount"
+                  value={input.personCount}
+                  onChange={(e) => handleChange(e as ChangeEvent<HTMLInputElement | HTMLSelectElement>)}
+                  variant="outlined"
+                  inputProps={{ min: 1, max: 15 }}
+                  fullWidth                  
+                />
+              </Grid>
+            </Grid>
           </AccordionDetails>
         </Accordion>
+
 
         <Button type="submit" variant="contained" color="primary">
           Calculate
