@@ -11,15 +11,15 @@ const GeneralManagerDashboard = () => {
   const { user } = useAuth();
   const router = useRouter();
 
-  if (user?.role !== 'General Manager') {
-    return null; // Optionally, render nothing until the redirect happens
-  }
   useEffect(() => {
     if (user?.role !== 'General Manager') {
       router.push('/unauthorized'); // Redirect to an unauthorized page
     }
   }, [user, router]);
-
+  
+  if (user?.role !== 'General Manager') {
+    return null; // Optionally, render nothing until the redirect happens
+  }
 
   return (
     <Box sx={{ padding: '20px' }}>
