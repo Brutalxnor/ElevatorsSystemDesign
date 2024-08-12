@@ -4173,6 +4173,486 @@
 
 
 
+
+
+// import React, { useEffect, useState } from 'react';
+// import {
+//   Box,
+//   Button,
+//   TextField,
+//   Typography,
+//   MenuItem,
+//   Accordion,
+//   AccordionSummary,
+//   AccordionDetails,
+//   IconButton,
+//   InputAdornment,
+//   Snackbar,
+//   Alert,
+//   Dialog,
+//   DialogActions,
+//   DialogContent,
+//   DialogContentText,
+//   DialogTitle,
+//   Tooltip,
+// } from '@mui/material';
+// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import Visibility from '@mui/icons-material/Visibility';
+// import VisibilityOff from '@mui/icons-material/VisibilityOff';
+// import EditIcon from '@mui/icons-material/Edit';
+// import { useRouter } from 'next/router';
+
+// interface UserNode {
+//   _id: string;
+//   username: string;
+//   role: string;
+//   children?: UserNode[];
+// }
+
+// const getRoleColor = (role: string) => {
+//   switch (role) {
+//     case 'General Manager':
+//       return '#a7a7a7'; // Light grey
+//     case 'Head of Sales':
+//       return '#c6c6c6'; // Slightly darker grey
+//     case 'Sales Operations':
+//       return '#d3d3d3'; // Very light grey
+//     case 'Team Leader':
+//       return '#f5f5f5'; // Off white
+//     case 'Sales':
+//       return '#fafafa'; // Almost white
+//     default:
+//       return '#f0f0f0'; // Default grey
+//   }
+// };
+
+// const UserManagement = () => {
+//   const router = useRouter();
+
+//   const [treeData, setTreeData] = useState<UserNode[]>([]);
+//   const [users, setUsers] = useState<UserNode[]>([]);
+//   const [username, setUsername] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [role, setRole] = useState('');
+//   const [parentId, setParentId] = useState<string | null>(null);
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [snackbarOpen, setSnackbarOpen] = useState(false);
+//   const [snackbarMessage, setSnackbarMessage] = useState('');
+//   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+//   const [openDialog, setOpenDialog] = useState(false);
+//   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+//   const [selectedPassword, setSelectedPassword] = useState(''); // New state for password management
+//   const [dialogAction, setDialogAction] = useState<'delete' | 'changePassword'>('delete'); // Track current action
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const response = await fetch('/api/get-all-users');
+//         const allUsers = await response.json();
+
+//         const parentUsersResponse = await fetch('/api/get-parent-users');
+//         const parentUsers = await parentUsersResponse.json();
+
+//         const chartResponse = await fetch('/api/get-org-chart');
+//         const treeData = await chartResponse.json();
+
+//         setTreeData(treeData);
+//         setUsers(parentUsers);
+//       } catch (error) {
+//         console.error('Failed to fetch org chart:', error);
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
+//   const handleAddUser = async (e: React.FormEvent) => {
+//     e.preventDefault();
+
+//     try {
+//       const response = await fetch('/api/assign-role', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ username, password, role, parentId }),
+//       });
+
+//       if (response.ok) {
+//         setSnackbarMessage('User added successfully!');
+//         setSnackbarSeverity('success');
+//         setSnackbarOpen(true);
+//         setUsername('');
+//         setPassword('');
+//         setRole('');
+//         setParentId(null);
+//         const fetchData = async () => {
+//           const response = await fetch('/api/get-org-chart');
+//           const data = await response.json();
+//           setTreeData(data);
+//         };
+//         fetchData();
+//       } else {
+//         setSnackbarMessage('Failed to add user.');
+//         setSnackbarSeverity('error');
+//         setSnackbarOpen(true);
+//       }
+//     } catch (error) {
+//       console.error('Error adding user:', error);
+//       setSnackbarMessage('Failed to add user.');
+//       setSnackbarSeverity('error');
+//       setSnackbarOpen(true);
+//     }
+//   };
+
+//   const handleDeleteUser = async (userId: string) => {
+//     if (!userId) {
+//       console.error('userId is undefined or invalid');
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch('/api/delete-user', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ userId }),
+//       });
+
+//       if (response.ok) {
+//         setSnackbarMessage('User deleted successfully!');
+//         setSnackbarSeverity('success');
+//         setSnackbarOpen(true);
+//         const fetchData = async () => {
+//           const response = await fetch('/api/get-org-chart');
+//           const data = await response.json();
+//           setTreeData(data);
+//         };
+//         fetchData();
+//       } else {
+//         console.error('Failed to delete user', await response.text());
+//         setSnackbarMessage('Failed to delete user.');
+//         setSnackbarSeverity('error');
+//         setSnackbarOpen(true);
+//       }
+//     } catch (error) {
+//       console.error('Error deleting user:', error);
+//       setSnackbarMessage('Failed to delete user.');
+//       setSnackbarSeverity('error');
+//       setSnackbarOpen(true);
+//     }
+//   };
+
+//   const handleOpenDialog = (userId: string, action: 'delete' | 'changePassword') => {
+//     setSelectedUserId(userId);
+//     setDialogAction(action); // Set the action type
+//     setOpenDialog(true);
+//   };
+
+//   const handleCloseDialog = () => {
+//     setOpenDialog(false);
+//     setSelectedUserId(null);
+//   };
+
+//   const handleConfirmAction = () => {
+//     if (dialogAction === 'delete') {
+//       handleDeleteUser(selectedUserId!);
+//     } else if (dialogAction === 'changePassword') {
+//       handleChangePassword(selectedUserId!);
+//     }
+//     setOpenDialog(false);
+//   };
+
+//   const togglePasswordVisibility = () => {
+//     setShowPassword(!showPassword);
+//   };
+
+//   const handleChangePassword = async (userId: string) => {
+//     try {
+//       const response = await fetch('/api/change-password', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ userId, newPassword: selectedPassword }),
+//       });
+
+//       if (response.ok) {
+//         setSnackbarMessage('Password changed successfully!');
+//         setSnackbarSeverity('success');
+//         setSnackbarOpen(true);
+//       } else {
+//         setSnackbarMessage('Failed to change password.');
+//         setSnackbarSeverity('error');
+//         setSnackbarOpen(true);
+//       }
+//     } catch (error) {
+//       console.error('Error changing password:', error);
+//       setSnackbarMessage('Failed to change password.');
+//       setSnackbarSeverity('error');
+//       setSnackbarOpen(true);
+//     }
+//   };
+
+//   type Role = 'General Manager' | 'Head of Sales' | 'Sales Operations' | 'Team Leader' | 'Sales';
+
+//   const roleOrder: Record<Role, number> = {
+//     'General Manager': 1,
+//     'Head of Sales': 2,
+//     'Sales Operations': 3,
+//     'Team Leader': 4,
+//     'Sales': 5,
+//   };
+  
+//   const sortNodes = (nodes: UserNode[]) => {
+//     return nodes.sort((a, b) => {
+//       const roleA = a.role as Role;
+//       const roleB = b.role as Role;
+  
+//       return roleOrder[roleA] - roleOrder[roleB];
+//     });
+//   };
+
+//   const renderTree = (nodes: UserNode[]) => {
+//     if (!Array.isArray(nodes)) {
+//       return null;
+//     }
+
+//     const sortedNodes = sortNodes(nodes);
+
+//     return (
+//       <Box sx={{ marginLeft: 2 }}>
+//         {sortedNodes.map((node) => (
+//           <Accordion
+//             key={node._id}
+//             sx={{
+//               marginBottom: 1,
+//               backgroundColor: getRoleColor(node.role),
+//               borderRadius: 2,
+//               boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+//               '&:before': {
+//                 display: 'none',
+//               },
+//             }}
+//           >
+//             <AccordionSummary
+//               expandIcon={<ExpandMoreIcon />}
+//               aria-controls={`panel-${node._id}-content`}
+//               id={`panel-${node._id}-header`}
+//               sx={{
+//                 borderRadius: 2,
+//               }}
+//             >
+//               <Typography variant="h6" sx={{ fontWeight: 600, color: '#333' }}>
+//                 {node.role}: {node.username}
+//               </Typography>
+//               <Box sx={{ marginLeft: 'auto', display: 'flex', gap: 1 }}>
+//                 <Tooltip title="Change Password">
+//                   <IconButton
+//                     aria-label="change-password"
+//                     size="small"
+//                     onClick={() => handleOpenDialog(node._id, 'changePassword')}
+//                     sx={{ color: '#666' }}
+//                   >
+//                     <EditIcon fontSize="small" />
+//                   </IconButton>
+//                 </Tooltip>
+//                 <Tooltip title="Delete User">
+//                   <IconButton
+//                     aria-label="delete"
+//                     size="small"
+//                     onClick={() => handleOpenDialog(node._id, 'delete')}
+//                     sx={{ color: '#666' }}
+//                   >
+//                     <DeleteIcon fontSize="small" />
+//                   </IconButton>
+//                 </Tooltip>
+//               </Box>
+//             </AccordionSummary>
+//             <AccordionDetails>
+//               {node.children && node.children.length > 0 ? (
+//                 <>
+//                   <Typography variant="body2" sx={{ marginLeft: 2, fontStyle: 'italic', color: '#555' }}>
+//                     Sales:
+//                   </Typography>
+//                   {renderTree(node.children)}
+//                 </>
+//               ) : (
+//                 <Typography variant="body2" sx={{ marginLeft: 2, fontStyle: 'italic', color: '#777' }}>
+//                   No Sales
+//                 </Typography>
+//               )}
+//             </AccordionDetails>
+//           </Accordion>
+//         ))}
+//       </Box>
+//     );
+//   };
+
+//   return (
+//     <Box sx={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+//       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
+//         User Management
+//       </Typography>
+//       <Box
+//         component="form"
+//         onSubmit={handleAddUser}
+//         sx={{
+//           marginBottom: '20px',
+//           display: 'flex',
+//           flexDirection: 'column',
+//           gap: '16px',
+//           backgroundColor: '#f7f7f7',
+//           padding: '20px',
+//           borderRadius: '8px',
+//           boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+//         }}
+//       >
+//         <TextField
+//           label="Username"
+//           value={username}
+//           onChange={(e) => setUsername(e.target.value)}
+//           fullWidth
+//           required
+//         />
+//         <TextField
+//           label="Password"
+//           type={showPassword ? 'text' : 'password'}
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//           fullWidth
+//           required
+//           InputProps={{
+//             endAdornment: (
+//               <InputAdornment position="end">
+//                 <IconButton
+//                   onClick={togglePasswordVisibility}
+//                   edge="end"
+//                 >
+//                   {showPassword ? <VisibilityOff /> : <Visibility />}
+//                 </IconButton>
+//               </InputAdornment>
+//             ),
+//           }}
+//         />
+//         <TextField
+//           label="Role"
+//           select
+//           value={role}
+//           onChange={(e) => setRole(e.target.value)}
+//           fullWidth
+//           required
+//         >
+//           <MenuItem value="General Manager">General Manager</MenuItem>
+//           <MenuItem value="Head of Sales">Head of Sales</MenuItem>
+//           <MenuItem value="Sales Operations">Sales Operations</MenuItem>
+//           <MenuItem value="Team Leader">Team Leader</MenuItem>
+//           <MenuItem value="Sales">Sales</MenuItem>
+//         </TextField>
+
+//         <TextField
+//           label="Parent User"
+//           select
+//           value={parentId || 'none'}
+//           onChange={(e) => {
+//             const selectedValue = e.target.value;
+//             setParentId(selectedValue === 'none' ? null : selectedValue);
+//           }}
+//           fullWidth
+//         >
+//           <MenuItem value="none" className='text-slate-700'>None (Top Level)</MenuItem>
+//           {users.map((user) => (
+//             <MenuItem key={user._id} value={user._id} className='text-slate-700'>
+//               {user.username} ({user.role})
+//             </MenuItem>
+//           ))}
+//         </TextField>
+
+//         <Button type="submit" variant="contained" color="primary">
+//           Add User
+//         </Button>
+//       </Box>
+
+//       <Typography variant="h5" component="h2" gutterBottom textAlign="center">
+//         Organization Hierarchy
+//       </Typography>
+//       <Box sx={{ marginTop: 2 }}>
+//         {treeData.length > 0 ? renderTree(treeData) : <Typography>No data available</Typography>}
+//       </Box>
+
+//       <Snackbar 
+//         open={snackbarOpen} 
+//         autoHideDuration={3000} 
+//         onClose={() => setSnackbarOpen(false)}
+//       >
+//         <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity}>
+//           {snackbarMessage}
+//         </Alert>
+//       </Snackbar>
+
+//       <Dialog
+//         open={openDialog}
+//         onClose={handleCloseDialog}
+//         aria-labelledby="alert-dialog-title"
+//         aria-describedby="alert-dialog-description"
+//       >
+//         <DialogTitle id="alert-dialog-title">
+//           {dialogAction === 'delete' ? 'Confirm Delete' : 'Change Password'}
+//         </DialogTitle>
+//         <DialogContent>
+//           {dialogAction === 'delete' ? (
+//             <DialogContentText id="alert-dialog-description">
+//               Are you sure you want to delete this user? This action cannot be undone.
+//             </DialogContentText>
+//           ) : (
+//             <TextField
+//               label="New Password"
+//               type={showPassword ? 'text' : 'password'}
+//               value={selectedPassword}
+//               onChange={(e) => setSelectedPassword(e.target.value)}
+//               fullWidth
+//               required
+//               InputProps={{
+//                 endAdornment: (
+//                   <InputAdornment position="end">
+//                     <IconButton
+//                       onClick={togglePasswordVisibility}
+//                       edge="end"
+//                     >
+//                       {showPassword ? <VisibilityOff /> : <Visibility />}
+//                     </IconButton>
+//                   </InputAdornment>
+//                 ),
+//               }}
+//             />
+//           )}
+//         </DialogContent>
+//         <DialogActions>
+//           <Button onClick={handleCloseDialog} color="primary">
+//             Cancel
+//           </Button>
+//           <Button onClick={handleConfirmAction} color="primary" autoFocus>
+//             {dialogAction === 'delete' ? 'Confirm Delete' : 'Confirm Change Password'}
+//           </Button>
+//         </DialogActions>
+//       </Dialog>
+
+//       <Box sx={{ marginTop: 2, textAlign: 'center' }}>
+//         <Button variant="contained" color="secondary" onClick={() => router.push('/dashboard/general-manager')}>
+//           Return to General Manager Dashboard
+//         </Button>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+// export default UserManagement;
+
+
+
+
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -4403,12 +4883,12 @@ const UserManagement = () => {
     'Team Leader': 4,
     'Sales': 5,
   };
-  
+
   const sortNodes = (nodes: UserNode[]) => {
     return nodes.sort((a, b) => {
       const roleA = a.role as Role;
       const roleB = b.role as Role;
-  
+
       return roleOrder[roleA] - roleOrder[roleB];
     });
   };
@@ -4539,7 +5019,12 @@ const UserManagement = () => {
           label="Role"
           select
           value={role}
-          onChange={(e) => setRole(e.target.value)}
+          onChange={(e) => {
+            setRole(e.target.value);
+            if (e.target.value !== 'Sales') {
+              setParentId(null); // Reset parent ID if the role is not Sales
+            }
+          }}
           fullWidth
           required
         >
@@ -4553,15 +5038,16 @@ const UserManagement = () => {
         <TextField
           label="Parent User"
           select
-          value={parentId || 'none'}
+          value={role === 'Sales' ? parentId || 'none' : 'none'} // Show "None" if not Sales
           onChange={(e) => {
             const selectedValue = e.target.value;
             setParentId(selectedValue === 'none' ? null : selectedValue);
           }}
           fullWidth
+          disabled={role !== 'Sales'} // Disable if the role is not Sales
         >
           <MenuItem value="none" className='text-slate-700'>None (Top Level)</MenuItem>
-          {users.map((user) => (
+          {role === 'Sales' && users.map((user) => (
             <MenuItem key={user._id} value={user._id} className='text-slate-700'>
               {user.username} ({user.role})
             </MenuItem>

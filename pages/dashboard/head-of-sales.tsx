@@ -61,6 +61,13 @@ const HeadOfSalesDashboard = () => {
       <Box sx={{ display: 'flex', gap: '10px', mt: '20px' }}>
         <Button
           variant="contained"
+          color="primary"
+          onClick={() => router.push('/calculator')}
+        >
+          Go to Calculator
+        </Button>
+        <Button
+          variant="contained"
           color="secondary"
           onClick={() => router.push('/lead-funnel')}
         >
